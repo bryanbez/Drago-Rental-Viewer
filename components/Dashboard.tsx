@@ -1,14 +1,25 @@
 import { View, Text } from 'react-native';
 import { useDragoStats } from 'app/hooks/useDragoStats';
+import { useMarketPrice } from 'app/hooks/useMarketPrice';
+import { getDSTPrice } from 'app/controllers/dstPriceController';
 import { getDragosFullData } from 'app/controllers/dragosController';
+import { useCachedDragos } from 'app/hooks/useCachedDragos';
 
 const DashboardComponent = () => {
+  const { dragos, loading } = useCachedDragos();
+
+  const getFullData = getDragosFullData(dragos ?? []);
+
   const { totalUnclaimedDSA, totalDragos, totalRentedDragos, totalUnrentedDragos } =
-    useDragoStats(getDragosFullData);
+    useDragoStats(getFullData);
 
   const view_box_style = 'aspect-[1] rounded-2xl p-6 shadow-md';
   const title_style = 'pb-4 text-center text-2xl font-semibold text-white';
   const desc_style = 'text-center text-4xl font-semibold text-white';
+
+  const { marketPrice } = useMarketPrice(getDSTPrice);
+
+  const USD_equivalent = (marketPrice * totalUnclaimedDSA).toFixed(2);
 
   return (
     <View className="flex-row flex-wrap justify-center p-4">
@@ -23,8 +34,11 @@ const DashboardComponent = () => {
       {/* Box 2 */}
       <View className="w-1/2 p-2">
         <View className={`bg-red-500 ${view_box_style}`}>
-          <Text className={`${title_style}`}>Unclaimed DSA</Text>
+          <Text className={`${title_style}`}>Unclaimed DST</Text>
           <Text className={`${desc_style}`}>{totalUnclaimedDSA}</Text>
+          <Text className={`pt-2 text-center text-xl font-semibold text-white`}>
+            (${USD_equivalent})
+          </Text>
         </View>
       </View>
 

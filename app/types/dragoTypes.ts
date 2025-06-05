@@ -22,13 +22,18 @@ export interface DragoRent {
   from: string;
   profitShareRatio: number;
   startDate: Date;
-  stats: DragoRentStats[];
+  stats: DragoRentStats;
   to: string;
 }
 
 export interface DragoParents {
   0: number;
   1: number;
+}
+
+export interface DragoApiCache<T> {
+  etag: string;
+  data: T; // T is use in generic placeholder in Typescript
 }
 
 export interface DragoInfo {
@@ -47,4 +52,5 @@ export interface DragoInfo {
   owner: string;
   grade: number;
   dragoImageURL: string;
+  stats: DragoRentStats;
 }

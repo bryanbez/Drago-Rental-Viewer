@@ -4,7 +4,3 @@ export interface LimitedDragoInfo {
   unclaimedDSA: number;
   level: number;
 }
-
-export interface DisplayCardProps {
-  filter: string;
-}

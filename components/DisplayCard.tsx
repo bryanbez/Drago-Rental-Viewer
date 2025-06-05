@@ -1,51 +1,80 @@
-import { Text, View } from 'react-native';
+import { View, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { CardComponent } from './partials/Card';
 import { useState } from 'react';
-import { DisplayCardProps } from 'app/types/dataFilterTypes';
 import { ActivityIndicator } from 'react-native-paper';
 import { filterDrago } from 'app/utils/filter';
 import { paginate } from 'app/utils/paginate';
 import { PaginationButtons } from './partials/PaginationBtn';
-import { useFetchDragos } from 'app/hooks/useFetchDragos';
+import { useCachedDragos } from 'app/hooks/useCachedDragos';
 import { getDragos } from 'app/controllers/dragosController';
+import { SegmentedBtn } from './partials/SegmentedBtn';
+import { LimitedDragoInfo } from 'app/types/dataFilterTypes';
 
-export const DisplayCard: React.FC<DisplayCardProps> = ({ filter }) => {
+export const DisplayCard: React.FC = () => {
+  // this is for saving data into local storage
+  const { dragos, loading } = useCachedDragos();
+
+  let convertToLimitedData: LimitedDragoInfo[] = [];
+
+  if (dragos) {
+    convertToLimitedData = getDragos(dragos);
+  }
+
   const [page, setPage] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(20);
-  const { dragos, loading, error } = useFetchDragos(getDragos);
+  const [filter, setSelectedFilter] = useState<string>('allDragos'); // default
 
   if (loading) return <ActivityIndicator size="large" />;
 
-  const filteredData = filterDrago(dragos, filter);
+  const filteredData = filterDrago(convertToLimitedData, filter);
   const paginated = paginate(filteredData, page, itemsPerPage);
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
+  console.log(page);
+
   return (
     <>
-      <PaginationButtons
-        page={page}
-        totalPages={totalPages}
-        onPageChange={(newPage) => setPage(newPage)}
-        itemsPerPage={itemsPerPage}
-        onItemsPerPageChange={(newCount) => {
-          setItemsPerPage(newCount);
-          setPage(0);
-        }}
-      />
-      <View className="flex-row flex-wrap justify-between ">
-        {paginated.map((drago) => (
-          <View className=" w-[49%]" key={drago.tokenId}>
-            <CardComponent
-              tokenId={`Drago #${drago.tokenId}`}
-              unclaimedDSA={drago.unclaimedDSA}
-              level={drago.level}
-              dragoImageURL={drago.dragoImageURL}
-            />
-          </View>
-        ))}
+      <SafeAreaView className="h-[20%] items-center justify-center bg-gray-300">
+        <SegmentedBtn
+          filter={filter}
+          selectedFilter={setSelectedFilter}
+          page={page}
+          setPage={setPage}
+        />
+        <PaginationButtons
+          page={page}
+          totalPages={totalPages}
+          onPageChange={(newPage) => setPage(newPage)}
+          itemsPerPage={itemsPerPage}
+          onItemsPerPageChange={(newCount) => {
+            setItemsPerPage(newCount);
+            setPage(0);
+          }}
+        />
+      </SafeAreaView>
 
-        {error && <Text className="text-center">Error Loading Dragos</Text>}
-      </View>
+      <ScrollView contentContainerStyle={styles.scrollViewStyle}>
+        <View className="flex-row flex-wrap justify-between">
+          {paginated.map((drago) => (
+            <View className=" w-[49%]" key={drago.tokenId}>
+              <CardComponent
+                tokenId={`Drago #${drago.tokenId}`}
+                unclaimedDSA={drago.unclaimedDSA}
+                level={drago.level}
+                dragoImageURL={drago.dragoImageURL}
+              />
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  scrollViewStyle: {
+    paddingBottom: 80,
+    paddingTop: 10,
+    backgroundColor: '#D1D5DB',
+  },
+});
