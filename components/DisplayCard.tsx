@@ -30,8 +30,6 @@ export const DisplayCard: React.FC = () => {
   const paginated = paginate(filteredData, page, itemsPerPage);
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  console.log(page);
-
   return (
     <>
       <SafeAreaView className="h-[20%] items-center justify-center bg-gray-300">
@@ -73,8 +71,7 @@ export const DisplayCard: React.FC = () => {
 
 const styles = StyleSheet.create({
   scrollViewStyle: {
-    paddingBottom: 80,
-    paddingTop: 10,
     backgroundColor: '#D1D5DB',
+    paddingBottom: 50,
   },
 });

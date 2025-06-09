@@ -17,7 +17,8 @@ export const fetchDragosInfo = async (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      address: '0xaE9B55a2CFc6054ED1b430Ff8de1Bd84A44204C5',
+      address: '0x39993e13f9BDd8D93793aD53834A2182924AE960',
+      //0xcF02aa83ca1A0D185b301f7d7f8FC2dFDEf2A0b5
       includeRent: true,
     }),
   });

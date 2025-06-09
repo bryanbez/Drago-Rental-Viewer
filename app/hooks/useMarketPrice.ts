@@ -1,19 +1,35 @@
+import { getDSTPrice } from 'app/controllers/dstPriceController';
 import { useEffect, useState } from 'react';
+import { DragonSoulTokenPriceProp, DSTPriceOutput } from 'app/types/dragoPriceTypes';
 
-interface DragonSoulTokenPriceProp {
-  marketPrice: number;
-}
-
-export const useMarketPrice = (
-  getDSTPrice: () => Promise<DragonSoulTokenPriceProp>
-): DragonSoulTokenPriceProp => {
+export const useMarketPrice = (dstCount: number): DSTPriceOutput => {
   const [marketPrice, setMarketPrice] = useState<number>(0);
+  const [initialPrice, setInitialPrice] = useState<number>(0);
+  const [sixhourschange, setSixHoursChange] = useState<string>('0%');
 
   useEffect(() => {
-    getDSTPrice().then((data) => {
-      setMarketPrice(data.marketPrice);
-    });
-  }, [getDSTPrice]);
+    const fetchPrice = async () => {
+      try {
+        const {
+          marketInfo: { marketPrice, sixhrchange },
+        }: DragonSoulTokenPriceProp = await getDSTPrice();
+        setInitialPrice(Number(marketPrice));
+        setSixHoursChange(sixhrchange);
+      } catch (err) {
+        console.error('Error fetching: ', err);
+        setInitialPrice(0);
+      }
+    };
 
-  return { marketPrice };
+    fetchPrice();
+  }, [dstCount]);
+
+  useEffect(() => {
+    if (initialPrice !== null) {
+      const finalPrice = (initialPrice * dstCount).toFixed(2);
+      setMarketPrice(Number(finalPrice) !== 0 ? Number(finalPrice) : 0);
+    }
+  }, [initialPrice, dstCount]);
+
+  return { marketPrice, initialPrice, sixhourschange };
 };

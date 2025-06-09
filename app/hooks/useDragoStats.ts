@@ -21,12 +21,21 @@ export const useDragoStats = (dragos: DragoInfo[] | null): DragoStatsProp => {
         // drago.rent.stats?.unclaimedProfit because some non rented dragos has unclaimed dst
         return acc + (everyDragoProfit ?? 0);
       }, 0);
+
       const totalUnRentedDragosCount = dragos?.filter(
         (item) => Number(item.rent.status) === 0
       ).length;
+
       const totalRentedDragosCount = dragos?.filter(
         (item) => Number(item.rent.status) === 1
       ).length;
+
+      // const totalRentedDragos = dragos
+      //   ?.filter((item) => Number(item.rent.status) === 1)
+      //   .map((item) => item.rent.stats.unclaimedProfit);
+
+      // console.log(totalRentedDragos);
+
       setTotalUnclaimedDSA(unclaimedProfitTotal);
       setTotalDragos(dragos?.length);
       setTotalRentedDragos(totalRentedDragosCount);

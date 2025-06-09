@@ -1,61 +1,79 @@
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView, Dimensions } from 'react-native';
 import { useDragoStats } from 'app/hooks/useDragoStats';
 import { useMarketPrice } from 'app/hooks/useMarketPrice';
-import { getDSTPrice } from 'app/controllers/dstPriceController';
 import { getDragosFullData } from 'app/controllers/dragosController';
 import { useCachedDragos } from 'app/hooks/useCachedDragos';
+import { DSTPriceOutput } from 'app/types/dragoPriceTypes';
 
 const DashboardComponent = () => {
-  const { dragos, loading } = useCachedDragos();
+  const { dragos } = useCachedDragos();
 
   const getFullData = getDragosFullData(dragos ?? []);
 
   const { totalUnclaimedDSA, totalDragos, totalRentedDragos, totalUnrentedDragos } =
     useDragoStats(getFullData);
 
-  const view_box_style = 'aspect-[1] rounded-2xl p-6 shadow-md';
-  const title_style = 'pb-4 text-center text-2xl font-semibold text-white';
-  const desc_style = 'text-center text-4xl font-semibold text-white';
+  const view_box_style = 'aspect-[1] rounded-2xl p-6';
+  const title_style = 'pb-4 text-center text-2xl font-semibold ';
+  const desc_style = 'text-center text-4xl font-semibold';
 
-  const { marketPrice } = useMarketPrice(getDSTPrice);
+  const { marketPrice, initialPrice, sixhourschange }: DSTPriceOutput =
+    useMarketPrice(totalUnclaimedDSA);
 
-  const USD_equivalent = (marketPrice * totalUnclaimedDSA).toFixed(2);
+  const isPositive = Number(sixhourschange) > 0;
+  const textColor = isPositive ? 'text-green-500' : 'text-red-500';
+  const other_text_style = `text-center text-xl font-semibold text-purple-800 `;
+
+  const screenWidth = Dimensions.get('window').width;
+  const cardWidth = screenWidth * 0.5;
+  const spacing = 16;
 
   return (
-    <View className="flex-row flex-wrap justify-center p-4">
-      {/* Box 1 */}
-      <View className="w-1/2 p-2">
-        <View className={`bg-blue-500 ${view_box_style}`}>
-          <Text className={`${title_style}`}>Dragos Count</Text>
-          <Text className={`${desc_style}`}>{totalDragos}</Text>
-        </View>
-      </View>
-
-      {/* Box 2 */}
-      <View className="w-1/2 p-2">
-        <View className={`bg-red-500 ${view_box_style}`}>
-          <Text className={`${title_style}`}>Unclaimed DST</Text>
-          <Text className={`${desc_style}`}>{totalUnclaimedDSA}</Text>
-          <Text className={`pt-2 text-center text-xl font-semibold text-white`}>
-            (${USD_equivalent})
+    <View className="mx-auto my-4 w-[90%] rounded-xl bg-white shadow-lg shadow-slate-900">
+      <View className="w-full flex-1 self-center rounded-2xl p-4">
+        {/* Box 1 */}
+        <View className=" mb-2 w-full rounded-xl border-2 border-red-300 bg-white p-4">
+          <Text className={`text-red-500 ${title_style}`}>Unclaimed DST</Text>
+          <Text className={`text-red-500 ${desc_style}`}>{totalUnclaimedDSA}</Text>
+          <Text className={`pt-2 text-center text-2xl font-semibold text-black`}>
+            (${marketPrice})
           </Text>
         </View>
-      </View>
 
-      {/* Box 3 */}
-      <View className="w-1/2 p-2">
-        <View className={`bg-green-500 ${view_box_style}`}>
-          <Text className={`${title_style}`}>Rented Dragos</Text>
-          <Text className={`${desc_style}`}>{totalRentedDragos}</Text>
-        </View>
-      </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={cardWidth + spacing}
+          decelerationRate="fast"
+          snapToAlignment="start"
+          contentContainerStyle={{ paddingHorizontal: 12, paddingRight: 24 }}
+          className="w-full">
+          <View
+            style={{ width: cardWidth, marginRight: spacing }}
+            className="mr-4  rounded-2xl border-2 border-green-300 bg-white p-4 shadow-lg">
+            <Text className={`text-green-500 ${title_style}`}>Rented Dragos</Text>
+            <Text className={`text-green-500 ${desc_style}`}>{totalRentedDragos}</Text>
+          </View>
 
-      {/* Box 4 */}
-      <View className="w-1/2 p-2">
-        <View className={`bg-purple-500 ${view_box_style}`}>
-          <Text className={`${title_style}`}>Non Rented Dragos</Text>
-          <Text className={`${desc_style}`}>{totalUnrentedDragos}</Text>
-        </View>
+          <View
+            style={{ width: cardWidth, marginRight: spacing }}
+            className="mr-4 rounded-2xl border-2 border-purple-300 bg-white p-4 shadow-lg">
+            <Text className={`text-purple-500 ${title_style}`}>Unrented Dragos</Text>
+            <Text className={`text-purple-500 ${desc_style}`}>{totalUnrentedDragos}</Text>
+          </View>
+
+          <View
+            style={{ width: cardWidth, marginRight: spacing }}
+            className="rounded-2xl border-2 border-blue-300 bg-white p-4 shadow-lg">
+            <Text className={` text-blue-500 ${title_style}`}>Dragos Count</Text>
+            <Text className={`text-blue-500 ${desc_style}`}>{totalDragos}</Text>
+          </View>
+        </ScrollView>
+      </View>
+      <View className="mb-4 self-center rounded-xl border-2 border-purple-800 p-2">
+        <Text className={`${other_text_style}`}>
+          DST to USD: ${initialPrice.toFixed(6)} ({sixhourschange}%)
+        </Text>
       </View>
     </View>
   );

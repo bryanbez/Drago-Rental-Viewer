@@ -1,8 +1,10 @@
+import { SettingsComponent } from 'components/SettingsComponent';
 import { View, Text } from 'react-native';
 export const SettingsPage = () => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View>
       <Text>Settings</Text>
+      <SettingsComponent />
     </View>
   );
 };
