@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { DragoInfo } from 'app/types/dragoTypes';
+import { getDragosFullData } from 'app/controllers/dragosController';
+import { useCachedDragos } from './useCachedDragos';
 
 interface DragoStatsProp {
   totalUnclaimedDSA: number;
@@ -8,40 +9,38 @@ interface DragoStatsProp {
   totalUnrentedDragos: number;
 }
 
-export const useDragoStats = (dragos: DragoInfo[] | null): DragoStatsProp => {
+export const useDragoStats = (): DragoStatsProp => {
   const [totalUnclaimedDSA, setTotalUnclaimedDSA] = useState<number>(0);
   const [totalRentedDragos, setTotalRentedDragos] = useState<number>(0);
   const [totalUnrentedDragos, setTotalUnrentedDragos] = useState<number>(0);
   const [totalDragos, setTotalDragos] = useState<number>(0);
 
+  const { dragos } = useCachedDragos();
+
+  const getFullData = getDragosFullData(dragos ?? []);
+
   useEffect(() => {
-    if (dragos) {
-      const unclaimedProfitTotal = dragos?.reduce((acc, drago) => {
+    if (getFullData) {
+      const unclaimedProfitTotal = getFullData?.reduce((acc, drago) => {
         const everyDragoProfit = drago.rent.stats?.unclaimedProfit;
         // drago.rent.stats?.unclaimedProfit because some non rented dragos has unclaimed dst
         return acc + (everyDragoProfit ?? 0);
       }, 0);
 
-      const totalUnRentedDragosCount = dragos?.filter(
+      const totalUnRentedDragosCount = getFullData?.filter(
         (item) => Number(item.rent.status) === 0
       ).length;
 
-      const totalRentedDragosCount = dragos?.filter(
+      const totalRentedDragosCount = getFullData?.filter(
         (item) => Number(item.rent.status) === 1
       ).length;
 
-      // const totalRentedDragos = dragos
-      //   ?.filter((item) => Number(item.rent.status) === 1)
-      //   .map((item) => item.rent.stats.unclaimedProfit);
-
-      // console.log(totalRentedDragos);
-
       setTotalUnclaimedDSA(unclaimedProfitTotal);
-      setTotalDragos(dragos?.length);
+      setTotalDragos(getFullData?.length);
       setTotalRentedDragos(totalRentedDragosCount);
       setTotalUnrentedDragos(totalUnRentedDragosCount);
     }
-  }, [dragos]);
+  }, [getFullData, dragos]);
 
   return { totalUnclaimedDSA, totalRentedDragos, totalUnrentedDragos, totalDragos };
 };

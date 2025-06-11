@@ -3,8 +3,9 @@ import { PaperProvider } from 'react-native-paper';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { HomeRoute, DragoRoute, SettingsRoute } from 'app/route';
+import { HomeRoute, DragoRoute, SettingsRoute, RenteeDragoRoute } from 'app/route';
 import { Ionicons } from '@expo/vector-icons';
+import { useCachedDragos } from 'app/hooks/useCachedDragos';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +19,13 @@ function DragoPage() {
   return <DragoRoute />;
 }
 
+function RenteeDragoPage() {
+  return <RenteeDragoRoute />;
+}
+
 export default function App() {
+  const { dragos } = useCachedDragos();
+  const dragoDataLength = dragos?.length;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
@@ -38,6 +45,9 @@ export default function App() {
                   case 'Settings':
                     iconName = focused ? 'settings' : 'settings-outline';
                     break;
+                  case 'Rentee Info':
+                    iconName = focused ? 'information-outline' : 'information-circle-outline';
+                    break;
                 }
 
                 return <Ionicons name={iconName as any} size={size} color={color} />;
@@ -46,7 +56,10 @@ export default function App() {
               tabBarInactiveTintColor: 'gray',
             })}>
             <Tab.Screen name="Home" component={HomePage} />
-            <Tab.Screen name="Dragos" component={DragoPage} />
+            {dragoDataLength !== 0 ? <Tab.Screen name="Dragos" component={DragoPage} /> : null}
+            {dragoDataLength !== 0 ? (
+              <Tab.Screen name="Rentee Info" component={RenteeDragoPage} />
+            ) : null}
             <Tab.Screen name="Settings" component={SettingsPage} />
           </Tab.Navigator>
         </NavigationContainer>

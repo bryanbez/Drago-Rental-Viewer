@@ -1,27 +1,18 @@
 import { View, Text, ScrollView, Dimensions } from 'react-native';
 import { useDragoStats } from 'app/hooks/useDragoStats';
 import { useMarketPrice } from 'app/hooks/useMarketPrice';
-import { getDragosFullData } from 'app/controllers/dragosController';
-import { useCachedDragos } from 'app/hooks/useCachedDragos';
 import { DSTPriceOutput } from 'app/types/dragoPriceTypes';
 
 const DashboardComponent = () => {
-  const { dragos } = useCachedDragos();
-
-  const getFullData = getDragosFullData(dragos ?? []);
-
   const { totalUnclaimedDSA, totalDragos, totalRentedDragos, totalUnrentedDragos } =
-    useDragoStats(getFullData);
+    useDragoStats();
 
-  const view_box_style = 'aspect-[1] rounded-2xl p-6';
   const title_style = 'pb-4 text-center text-2xl font-semibold ';
   const desc_style = 'text-center text-4xl font-semibold';
 
   const { marketPrice, initialPrice, sixhourschange }: DSTPriceOutput =
     useMarketPrice(totalUnclaimedDSA);
 
-  const isPositive = Number(sixhourschange) > 0;
-  const textColor = isPositive ? 'text-green-500' : 'text-red-500';
   const other_text_style = `text-center text-xl font-semibold text-purple-800 `;
 
   const screenWidth = Dimensions.get('window').width;

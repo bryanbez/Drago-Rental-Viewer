@@ -19,6 +19,9 @@ export const fetchDragosInfo = async (
     body: JSON.stringify({
       address: '0x39993e13f9BDd8D93793aD53834A2182924AE960',
       //0xcF02aa83ca1A0D185b301f7d7f8FC2dFDEf2A0b5
+      //0x1839BFc9bb71aa8E2F1f863df4C93529c500ffDb
+      //0x39993e13f9BDd8D93793aD53834A2182924AE960 100+ dragos
+      // 0xff8Ae8C86afcF0beB8332778B9591832F7767E6c
       includeRent: true,
     }),
   });
@@ -32,10 +35,6 @@ export const fetchDragosInfo = async (
   // return code in fetching dragos via POST
   const wholeResponse = await response.json();
   const data = wholeResponse.myDragos;
-
-  // const data = await response.json();
-
-  // console.log(`[API] Response ETag: ${newEtag}`);
 
   return { data, etag: newEtag };
 };

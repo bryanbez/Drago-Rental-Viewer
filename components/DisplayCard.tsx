@@ -56,7 +56,7 @@ export const DisplayCard: React.FC = () => {
           {paginated.map((drago) => (
             <View className=" w-[49%]" key={drago.tokenId}>
               <CardComponent
-                tokenId={`Drago #${drago.tokenId}`}
+                tokenId={drago.tokenId}
                 unclaimedDSA={drago.unclaimedDSA}
                 level={drago.level}
                 dragoImageURL={drago.dragoImageURL}
