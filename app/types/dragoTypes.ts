@@ -32,7 +32,7 @@ export interface DragoParents {
 }
 
 export interface DragoApiCache<T> {
-  etag: string;
+  etag?: string;
   data: T; // T is use in generic placeholder in Typescript
 }
 

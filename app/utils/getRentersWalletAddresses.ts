@@ -4,7 +4,7 @@ import { LimitedDragoInfo } from 'app/types/dataFilterTypes';
 export interface RentersInfo {
   walletAddress: string;
   dragoRentedCount: number;
-  totalUnclaimedDST: number;
+  renterCurrentGatherDSTCount: number;
   dragoInfo: LimitedDragoInfo[];
 }
 
@@ -31,13 +31,13 @@ export const getRentersWalletAddresses = (dragos: DragoInfo[]): RentersInfo[] =>
     }
 
     if (walletMap[wallet]) {
-      walletMap[wallet].totalUnclaimedDST += unclaimedProfit;
+      walletMap[wallet].renterCurrentGatherDSTCount += unclaimedProfit;
       walletMap[wallet].dragoRentedCount += 1;
       walletMap[wallet].dragoInfo.push(limitedDragoInfo);
     } else {
       walletMap[wallet] = {
         walletAddress: wallet,
-        totalUnclaimedDST: unclaimedProfit,
+        renterCurrentGatherDSTCount: unclaimedProfit,
         dragoRentedCount: 1,
         dragoInfo: [limitedDragoInfo],
       };
@@ -45,7 +45,7 @@ export const getRentersWalletAddresses = (dragos: DragoInfo[]): RentersInfo[] =>
   });
 
   const result = Object.values(walletMap).sort(
-    (a, b) => Number(b.totalUnclaimedDST) - Number(a.totalUnclaimedDST)
+    (a, b) => Number(b.renterCurrentGatherDSTCount) - Number(a.renterCurrentGatherDSTCount)
   );
 
   return result;

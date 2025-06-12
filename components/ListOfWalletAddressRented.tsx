@@ -25,7 +25,7 @@ const ListOfWalletAddressRented = () => {
               {rentInfo.dragoRentedCount}
             </Text>
             <Text className="w-[30%] text-center text-sm font-medium">
-              {rentInfo.totalUnclaimedDST}
+              {rentInfo.renterCurrentGatherDSTCount}
             </Text>
           </View>
         );

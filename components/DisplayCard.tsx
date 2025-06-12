@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import { CardComponent } from './partials/Card';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
@@ -9,9 +9,12 @@ import { useCachedDragos } from 'app/hooks/useCachedDragos';
 import { getDragos } from 'app/controllers/dragosController';
 import { SegmentedBtn } from './partials/SegmentedBtn';
 import { LimitedDragoInfo } from 'app/types/dataFilterTypes';
+import { useSelector } from 'react-redux';
+import { RootState } from 'app/store';
 
 export const DisplayCard: React.FC = () => {
   // this is for saving data into local storage
+
   const { dragos, loading } = useCachedDragos();
 
   let convertToLimitedData: LimitedDragoInfo[] = [];
@@ -21,7 +24,9 @@ export const DisplayCard: React.FC = () => {
   }
 
   const [page, setPage] = useState<number>(0);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(20);
+
+  const itemsPerPage = useSelector((state: RootState) => state.settings.dragoDisplayPerPage);
+
   const [filter, setSelectedFilter] = useState<string>('allDragos'); // default
 
   if (loading) return <ActivityIndicator size="large" />;
@@ -45,7 +50,7 @@ export const DisplayCard: React.FC = () => {
           onPageChange={(newPage) => setPage(newPage)}
           itemsPerPage={itemsPerPage}
           onItemsPerPageChange={(newCount) => {
-            setItemsPerPage(newCount);
+            // setItemsPerPage(newCount);
             setPage(0);
           }}
         />
