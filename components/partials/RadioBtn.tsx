@@ -14,7 +14,10 @@ const dragoPerPageOptions = [
 export const RadioBtnComponent = ({ onValueChange, selectedOption }: RadioBtnProps) => {
   return (
     <>
-      <Text style={{ fontWeight: 'bold', fontSize: 20, margin: 4 }}>Drago Display Per Page</Text>
+      <View>
+        <Text style={{ fontWeight: 'bold', fontSize: 20, margin: 4 }}>Drago Display Per Page</Text>
+      </View>
+
       {dragoPerPageOptions.map((option) => (
         <Pressable
           key={option.value}
@@ -46,7 +49,9 @@ export const RadioBtnComponent = ({ onValueChange, selectedOption }: RadioBtnPro
               />
             )}
           </View>
-          <Text>{option.label}</Text>
+          <View>
+            <Text>{option.label}</Text>
+          </View>
         </Pressable>
       ))}
     </>

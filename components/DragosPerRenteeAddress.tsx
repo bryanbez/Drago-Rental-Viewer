@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDragosPerRenteeAddress } from 'app/hooks/useGetRenteesInfo';
-import { List, Text, ProgressBar, Card } from 'react-native-paper';
-import { View, Image } from 'react-native';
+import { List, Card } from 'react-native-paper';
+import { View, Image, Text } from 'react-native';
 import { CardComponent } from './partials/Card';
 import { fetchDragoPic } from 'app/utils/fetchDragoPic';
 import { shortenWalletAddress } from 'app/utils/shortenWA';
-import { useDragoStats } from 'app/hooks/useDragoStats';
 
 export const DragosPerRenteeAddress = () => {
   const { rentedDragosInfo } = useDragosPerRenteeAddress();
 
   const [expandedList, setExpandedList] = useState<number | null>(null);
-
-  // const { totalUnclaimedDSA } = useDragoStats();
-
   const handlePress = (index: number) => {
     setExpandedList((prevIndex) => (prevIndex === index ? null : index));
   };
@@ -21,12 +17,6 @@ export const DragosPerRenteeAddress = () => {
   return (
     <List.Section>
       {rentedDragosInfo?.map((rentInfo, index) => {
-        // const percent =
-        //   rentInfo?.renterCurrentGatherDSTCount != null &&
-        //   totalUnclaimedDSA != null &&
-        //   totalUnclaimedDSA > 0
-        //     ? rentInfo.renterCurrentGatherDSTCount / totalUnclaimedDSA
-        //     : 0;
         return (
           <Card key={index} style={{ marginVertical: 5, width: '90%', alignSelf: 'center' }}>
             <View>
@@ -35,7 +25,7 @@ export const DragosPerRenteeAddress = () => {
                   left={() => (
                     <Image
                       source={require('../assets/wallet-address.png')}
-                      style={{ width: 30, height: 30, borderRadius: 8, marginRight: 8 }}
+                      style={{ width: 30, height: 30, marginRight: 8 }}
                     />
                   )}
                   title={`${shortenWalletAddress(rentInfo.walletAddress)}`}
@@ -71,7 +61,7 @@ export const DragosPerRenteeAddress = () => {
                       style={{ width: 30, height: 30, borderRadius: 8, marginRight: 8 }}
                     />
                   )}
-                  title={`${rentInfo.renterCurrentGatherDSTCount}`}
+                  title={`${rentInfo.renterCurrentGatherDSTCount} DST`}
                   titleStyle={{ fontSize: 16, fontWeight: 'bold' }}
                   style={{
                     borderBottomWidth: 2,
@@ -84,10 +74,17 @@ export const DragosPerRenteeAddress = () => {
               <List.Accordion
                 title=""
                 right={() => (
-                  <Text
-                    style={{ color: '#10b981', fontWeight: 'bold', fontSize: 16, marginRight: 8 }}>
-                    {expandedList === index ? 'Hide Dragos' : 'See Dragos'}
-                  </Text>
+                  <View>
+                    <Text
+                      style={{
+                        color: '#10b981',
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                        marginRight: 8,
+                      }}>
+                      {expandedList === index ? 'Hide Dragos' : 'See Dragos'}
+                    </Text>
+                  </View>
                 )}
                 titleStyle={{ fontWeight: 'bold', color: '#1f2937' }}
                 expanded={expandedList === index}

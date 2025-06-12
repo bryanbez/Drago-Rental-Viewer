@@ -10,7 +10,9 @@ export const TextBoxComponent: React.FC<TextboxProps> = ({ onChangeText }) => {
     <View>
       <TextInput
         label="Wallet Address"
-        onChangeText={(text) => onChangeText('walletAddress', text)}
+        onChangeText={(text) => {
+          onChangeText('walletAddress', text);
+        }}
       />
       ;
     </View>

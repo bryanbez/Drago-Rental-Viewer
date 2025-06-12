@@ -19,11 +19,7 @@ export function SettingsComponent() {
     };
 
     setSettingData(newData);
-
-    updateSetting({
-      dragoDisplayPerPage: newData.dragosDisplayPerPage,
-      walletAddress: newData.walletAddress,
-    });
+    updateSetting(newData);
 
     // use the newData const to update immediately the data.
     // no need to call the useState to save the data in redux-persists
