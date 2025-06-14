@@ -11,15 +11,13 @@ export function SettingsComponent() {
     walletAddress: '',
     dragosDisplayPerPage: 5,
   });
-
   const handleInputChange = async (name: string, value: number | string) => {
     const newData = {
       ...settingData,
       [name]: value,
     };
-
-    setSettingData(newData);
-    updateSetting(newData);
+    setSettingData({ ...newData });
+    updateSetting({ ...newData });
 
     // use the newData const to update immediately the data.
     // no need to call the useState to save the data in redux-persists

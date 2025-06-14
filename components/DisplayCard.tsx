@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
+import { View, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { CardComponent } from './partials/Card';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
@@ -25,7 +25,7 @@ export const DisplayCard: React.FC = () => {
 
   const [page, setPage] = useState<number>(0);
 
-  const itemsPerPage = useSelector((state: RootState) => state.settings.dragoDisplayPerPage);
+  const itemsPerPage = useSelector((state: RootState) => state.settings.dragosDisplayPerPage);
 
   const [filter, setSelectedFilter] = useState<string>('allDragos'); // default
 
@@ -41,7 +41,7 @@ export const DisplayCard: React.FC = () => {
         <SegmentedBtn
           filter={filter}
           selectedFilter={setSelectedFilter}
-          page={page}
+          // page={page}
           setPage={setPage}
         />
         <PaginationButtons
@@ -57,7 +57,7 @@ export const DisplayCard: React.FC = () => {
       </SafeAreaView>
 
       <ScrollView contentContainerStyle={styles.scrollViewStyle}>
-        <View className="flex-row flex-wrap justify-between">
+        <View className="w-[95%] flex-row flex-wrap justify-between self-center">
           {paginated.map((drago) => (
             <View className=" w-[49%]" key={drago.tokenId}>
               <CardComponent

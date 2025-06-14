@@ -39,10 +39,7 @@ export const CardOneRow = ({ dragos }: TableDisplayProps) => {
                 borderColor: borderColorByRank,
               }}
               className="my-2 overflow-hidden bg-slate-50 shadow-md">
-              <Card.Cover
-                source={{ uri: drago.dragoImage }}
-                style={{ height: 175, width: '100%' }}
-              />
+              <Card.Cover source={{ uri: drago.dragoImage }} />
               <Card.Content>
                 <Text className={dragoDescription}>Unclaimed DSA: {drago.unclaimedProfit}</Text>
               </Card.Content>

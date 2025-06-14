@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface SettingsState {
-  dragoDisplayPerPage: number;
+  dragosDisplayPerPage: number;
   walletAddress: string | null;
 }
 
 const initialState: SettingsState = {
-  dragoDisplayPerPage: 5,
+  dragosDisplayPerPage: 5,
   walletAddress: null,
 };
 

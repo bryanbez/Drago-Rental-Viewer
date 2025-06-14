@@ -4,16 +4,10 @@ import { SegmentedButtons } from 'react-native-paper';
 export interface FilterBarProps {
   filter: string;
   selectedFilter: (value: string) => void;
-  page: number;
   setPage: (value: number) => void;
 }
 
-export const SegmentedBtn: React.FC<FilterBarProps> = ({
-  filter,
-  selectedFilter,
-  page,
-  setPage,
-}) => {
+export const SegmentedBtn: React.FC<FilterBarProps> = ({ filter, selectedFilter, setPage }) => {
   const handleChange = (value: string) => {
     selectedFilter(value);
     setPage(0); // reset to page 1 on filter change
@@ -26,7 +20,7 @@ export const SegmentedBtn: React.FC<FilterBarProps> = ({
         onValueChange={handleChange}
         buttons={[
           { value: 'allDragos', label: 'All Dragos' },
-          { value: 'withUnclaimedDSA', label: 'Has Unclaimed DSA' },
+          { value: 'withUnclaimedDSA', label: 'With Unclaimed DST' },
         ]}
       />
     </View>

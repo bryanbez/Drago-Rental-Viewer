@@ -10,7 +10,7 @@ export const CardComponent = ({
 }: LimitedDragoInfo) => {
   return (
     <Card className="my-2 overflow-hidden shadow-md">
-      <Card.Cover source={{ uri: dragoImageURL }} style={{ height: 150, width: '100%' }} />
+      <Card.Cover source={{ uri: dragoImageURL }} />
       <Card.Content className="px-4 py-2">
         <Text className="text-lg font-semibold">Drago #{tokenId}</Text>
         <Text className="text-lg font-semibold">To Claim: {unclaimedDSA} DST</Text>

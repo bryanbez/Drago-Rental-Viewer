@@ -30,14 +30,14 @@ export const useCachedDragos = () => {
 
       const response = await fetchDragosInfo(cachedData?.etag);
       if (response.etag !== cachedData?.etag) {
-        console.log('🔄 ETag changed — updating cache');
+        console.log('Updating cache data');
         setDragos(response.data);
         await saveCacheData(STORAGE_KEY, {
           data: response.data,
           etag: response.etag,
         });
       } else {
-        console.log('✅ ETag unchanged — using cached data');
+        console.log('Using cached data');
       }
 
       setLoading(false);
